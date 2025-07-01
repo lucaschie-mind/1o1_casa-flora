@@ -20,7 +20,7 @@ user_responses = {}
 
 questions = [
     "Qual será a data do 1:1? (formato: dd/mm/aaaa)",
-    "Como você está se sentido? (1 - Nervoso(a)/Frustrado, 2 - Triste, 3 - Neutro(a), 4 - Feliz, 5 - Empolgado(a), 6 - Outro (Ansioso(a)/Preocupado(a)))",
+    "Como você está se sentindo? \n\n1️⃣ - Nervoso(a)/Frustrado 😠\n2️⃣ - Triste 😢\n3️⃣ - Neutro(a) 😐\n4️⃣ - Feliz 🙂\n5️⃣ - Empolgado(a) 😄\n6️⃣ - Outro (Ansioso(a)/Preocupado(a)) 😟",
     "Fale um pouco mais de como está se sentindo.",
     "Quais as conquistas e avanços desde o último encontro?",
     "Quais os principais assuntos que serão discutidos no 1:1?",
@@ -28,7 +28,7 @@ questions = [
 ]
 
 sentimentos_map = {
-    "1": "Nervoso(a)/Frustrado",
+    "1": "Nervoso(a)/Frustrado ",
     "2": "Triste",
     "3": "Neutro(a)",
     "4": "Feliz",
