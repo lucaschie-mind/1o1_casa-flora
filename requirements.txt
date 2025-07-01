@@ -9,3 +9,4 @@ botbuilder-core
 botframework-connector
 aiohttp
 msrest
+python-dateutil
