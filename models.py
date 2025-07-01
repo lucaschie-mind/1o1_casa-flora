@@ -36,3 +36,4 @@ class Registro1o1(Base):
     principais_assuntos = Column(Text)
     combinados = Column(Text)
     datastamp = Column(DateTime)
+    relatorio = Column(Text, nullable=True)
