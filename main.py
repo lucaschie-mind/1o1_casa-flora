@@ -96,6 +96,30 @@ async def on_turn(turn_context: TurnContext):
         if user_states[user_id] >= len(questions):
             user_email = await obter_email(turn_context)
 
+             # Montagem do campo relatorio
+            relatorio_text = f"""
+Formulário 1:1
+
+Data do 1:1:
+{user_responses[user_id][0].strftime('%d/%m/%Y')}
+
+Sentimento:
+{user_responses[user_id][1]}
+
+Comentário sobre o sentimento:
+{user_responses[user_id][2]}
+
+Conquistas:
+{user_responses[user_id][3]}
+
+Principais assuntos:
+{user_responses[user_id][4]}
+
+Combinados e expectativas:
+{user_responses[user_id][5]}
+"""
+
+
             try:
                 async with async_session() as session:
                     novo_registro = Registro1o1(
@@ -110,7 +134,8 @@ async def on_turn(turn_context: TurnContext):
                         conquistas=user_responses[user_id][3],
                         principais_assuntos=user_responses[user_id][4],
                         combinados=user_responses[user_id][5],
-                        datastamp=datetime.utcnow()
+                        datastamp=datetime.utcnow(),
+                        relatorio=relatorio_text
                     )
                     session.add(novo_registro)
                     await session.commit()
