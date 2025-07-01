@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+sqlalchemy[asyncio]
+asyncpg
+alembic
+psycopg2-binary
+botbuilder-core
+botbuilder-core
+botframework-connector
+aiohttp
+msrest
