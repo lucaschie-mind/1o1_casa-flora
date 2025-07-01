@@ -7,11 +7,15 @@ from botbuilder.core import BotFrameworkAdapter, BotFrameworkAdapterSettings, Tu
 from botbuilder.schema import Activity
 from botbuilder.core.teams import TeamsInfo
 from dateutil.parser import parse as parse_date
+import requests
 
 app = FastAPI()
 
 APP_ID = os.getenv("MICROSOFT_APP_ID", "")
 APP_PASSWORD = os.getenv("MICROSOFT_APP_PASSWORD", "")
+SENDER_EMAIL = os.getenv("SENDER_EMAIL", "")
+ACCESS_TOKEN = os.getenv("GRAPH_ACCESS_TOKEN", "")
+
 adapter_settings = BotFrameworkAdapterSettings(APP_ID, APP_PASSWORD)
 adapter = BotFrameworkAdapter(adapter_settings)
 
@@ -54,6 +58,34 @@ async def obter_email(turn_context):
     except Exception as e:
         print(f"Erro ao obter email: {e}")
         return None
+    
+def enviar_email(destinatario, assunto, corpo):
+    url = f"https://graph.microsoft.com/v1.0/users/{SENDER_EMAIL}/sendMail"
+    headers = {
+        "Authorization": f"Bearer {ACCESS_TOKEN}",
+        "Content-Type": "application/json"
+    }
+    email_data = {
+        "message": {
+            "subject": assunto,
+            "body": {
+                "contentType": "Text",
+                "content": corpo
+            },
+            "toRecipients": [
+                {"emailAddress": {"address": destinatario}}
+            ]
+        },
+        "saveToSentItems": "true"
+    }
+    try:
+        response = requests.post(url, headers=headers, json=email_data)
+        if response.status_code == 202:
+            print(f"✅ Email enviado para {destinatario}")
+        else:
+            print(f"❌ Erro ao enviar e-mail: {response.status_code} - {response.text}")
+    except Exception as e:
+        print(f"❌ Exceção ao enviar e-mail: {e}")
 
 async def on_turn(turn_context: TurnContext):
     text = turn_context.activity.text.strip()
@@ -139,7 +171,10 @@ Combinados e expectativas:
                     )
                     session.add(novo_registro)
                     await session.commit()
-                    reply_text = "✅ Registro 1o1 salvo com sucesso!"
+                assunto = f"[Resumo semanal] - {user_responses[user_id][0].strftime('%d/%m/%Y')}"
+                corpo = relatorio_text
+                enviar_email(user_email, assunto, corpo)
+                reply_text = "✅ Registro 1o1 salvo com sucesso!"
             except Exception as e:
                 reply_text = f"❌ Erro ao salvar no banco: {e}"
 
