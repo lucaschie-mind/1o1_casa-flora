@@ -171,9 +171,11 @@ Combinados e expectativas:
                     )
                     session.add(novo_registro)
                     await session.commit()
+
                 assunto = f"[Resumo semanal] - {user_responses[user_id][0].strftime('%d/%m/%Y')}"
                 corpo = relatorio_text
                 enviar_email(user_email, assunto, corpo)
+                
                 reply_text = "✅ Registro 1o1 salvo com sucesso!"
             except Exception as e:
                 reply_text = f"❌ Erro ao salvar no banco: {e}"
