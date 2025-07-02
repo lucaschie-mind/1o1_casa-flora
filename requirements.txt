@@ -5,8 +5,9 @@ asyncpg
 alembic
 psycopg2-binary
 botbuilder-core
-botbuilder-core
 botframework-connector
 aiohttp
 msrest
 python-dateutil
+requests
+python-dotenv

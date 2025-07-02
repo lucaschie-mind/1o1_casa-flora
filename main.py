@@ -8,13 +8,17 @@ from botbuilder.schema import Activity
 from botbuilder.core.teams import TeamsInfo
 from dateutil.parser import parse as parse_date
 import requests
+from dotenv import load_dotenv
+
 
 app = FastAPI()
+
+load_dotenv()
 
 APP_ID = os.getenv("MICROSOFT_APP_ID", "")
 APP_PASSWORD = os.getenv("MICROSOFT_APP_PASSWORD", "")
 SENDER_EMAIL = os.getenv("SENDER_EMAIL", "")
-ACCESS_TOKEN = os.getenv("GRAPH_ACCESS_TOKEN", "")
+#ACCESS_TOKEN = os.getenv("GRAPH_ACCESS_TOKEN", "")
 
 adapter_settings = BotFrameworkAdapterSettings(APP_ID, APP_PASSWORD)
 adapter = BotFrameworkAdapter(adapter_settings)
@@ -58,11 +62,16 @@ async def obter_email(turn_context):
     except Exception as e:
         print(f"Erro ao obter email: {e}")
         return None
-    
+
 def enviar_email(destinatario, assunto, corpo):
+    token = gerar_novo_token()
+    if not token:
+        print("❌ Não foi possível gerar token para envio de e-mail.")
+        return
+
     url = f"https://graph.microsoft.com/v1.0/users/{SENDER_EMAIL}/sendMail"
     headers = {
-        "Authorization": f"Bearer {ACCESS_TOKEN}",
+        "Authorization": f"Bearer {token}",
         "Content-Type": "application/json"
     }
     email_data = {
