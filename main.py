@@ -62,6 +62,23 @@ async def obter_email(turn_context):
     except Exception as e:
         print(f"Erro ao obter email: {e}")
         return None
+    
+def gerar_novo_token():
+    url = f"https://login.microsoftonline.com/{os.getenv('TENANT_ID')}/oauth2/v2.0/token"
+    headers = {"Content-Type": "application/x-www-form-urlencoded"}
+    data = {
+        "client_id": os.getenv("CLIENT_ID"),
+        "scope": "https://graph.microsoft.com/.default",
+        "client_secret": os.getenv("CLIENT_SECRET"),
+        "grant_type": "client_credentials"
+    }
+
+    response = requests.post(url, data=data, headers=headers)
+    if response.status_code == 200:
+        return response.json().get("access_token")
+    else:
+        print(f"❌ Erro ao gerar token: {response.status_code} - {response.text}")
+        return None
 
 def enviar_email(destinatario, assunto, corpo):
     token = gerar_novo_token()
